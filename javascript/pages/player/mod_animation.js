@@ -1,0 +1,1 @@
+export const OnAnimateEnd$ = new rxjs.Observable();
