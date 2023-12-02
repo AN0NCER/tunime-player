@@ -1,3 +1,7 @@
+@font-face {
+  font-family: "Manrope";
+  src: url("/style/fonts/Manrope.ttf") format("truetype");
+}
 * {
   margin: 0;
   padding: 0;

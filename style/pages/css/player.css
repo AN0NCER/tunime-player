@@ -1,10 +1,256 @@
 body,
 html {
-  background: #15171e;
+  background: #000;
   width: 100%;
   height: 100%;
   overflow: hidden;
   -webkit-text-size-adjust: none;
+}
+
+.player-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.player-wrapper video {
+  height: 100%;
+  width: 100%;
+}
+.player-wrapper .controls-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+.player-wrapper .controls-wrapper .player-controls {
+  border-radius: 3px 3px 0px 0px;
+  background: #282a2e;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .switch-button {
+  position: relative;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .switch-button svg {
+  position: absolute;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .switch-button.status-pause svg.pause {
+  opacity: 0;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .switch-button.status-play svg.play {
+  opacity: 0;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .player-time {
+  display: flex;
+  font-family: Manrope;
+  font-size: 13px;
+  gap: 2px;
+  cursor: default;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .player-time .current-time {
+  color: #FFF;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .player-time .divider,
+.player-wrapper .controls-wrapper .player-controls .l-controls .player-time .durration {
+  color: rgba(255, 255, 255, 0.4);
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .volume-slider .slide {
+  max-width: 0px;
+  cursor: pointer;
+  height: 10px;
+  background: rgb(37, 58, 76);
+  width: 130px;
+  border-radius: 3px;
+  display: flex;
+  overflow: hidden;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .volume-slider .slide .current-slide {
+  height: 100%;
+  background: #5fbef3;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls .volume-slider.enable .slide {
+  max-width: 130px;
+}
+.player-wrapper .controls-wrapper .player-controls .l-controls,
+.player-wrapper .controls-wrapper .player-controls .r-controls {
+  display: flex;
+  align-items: center;
+}
+.player-wrapper .controls-wrapper .player-controls .btn {
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.player-wrapper .controls-wrapper .player-controls .btn svg {
+  fill: #ffffff;
+  height: 16px;
+}
+.player-wrapper .controls-wrapper .player-slides {
+  position: relative;
+  transform: translateY(4px);
+}
+.player-wrapper .controls-wrapper .player-slides .current-slid {
+  width: 0%;
+  background: #5fbef3;
+  z-index: 2;
+  position: relative;
+}
+.player-wrapper .controls-wrapper .player-slides .loaded-slid {
+  width: 0%;
+  background: rgb(37, 58, 76);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+.player-wrapper .controls-wrapper .player-slides .trim-slid {
+  width: 0%;
+  background: #f35f5f;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 3;
+}
+.player-wrapper .controls-wrapper .player-slides .slid {
+  height: 10px;
+  border-radius: 3px;
+}
+.player-wrapper .controls-wrapper .player-cursors {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.player-wrapper .controls-wrapper .player-cursors .current-cursor {
+  left: calc(0% - 6.5px);
+  background: #2672DA;
+}
+.player-wrapper .controls-wrapper .player-cursors .trim-cursor {
+  right: calc(0% - 6.5px);
+  background: #da2626;
+}
+.player-wrapper .controls-wrapper .player-cursors .cursor {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  display: grid;
+  top: 0px;
+  z-index: 5;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.player-wrapper .controls-wrapper .player-cursors .cursor.hide {
+  display: none;
+}
+.player-wrapper .controls-wrapper .player-settings {
+  background: #282A2E;
+  min-height: 45px;
+  max-width: 250px;
+  width: 100%;
+  border-radius: 3px;
+  position: absolute;
+  right: 10px;
+  bottom: 65px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(240px);
+  opacity: 0;
+  display: none;
+}
+.player-wrapper .controls-wrapper .player-settings label.quality-setup {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.player-wrapper .controls-wrapper .player-settings label.quality-setup .quality {
+  display: grid;
+  place-items: center;
+  color: #FFF;
+  font-family: Manrope;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.player-wrapper .controls-wrapper .player-settings label.quality-setup .quality.selected {
+  background: #2672DA;
+}
+.player-wrapper .controls-wrapper .player-settings label.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: #fff;
+  font-family: Manrope;
+  cursor: pointer;
+}
+.player-wrapper .controls-wrapper .player-settings label.checkbox .title {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 15px;
+}
+.player-wrapper .controls-wrapper .player-settings label.checkbox .checkbox {
+  position: absolute;
+  right: 20px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  background: #C0C0C0;
+  border-radius: 3px;
+}
+.player-wrapper .controls-wrapper .player-settings label.checkbox .checkbox .switch-check {
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: #3C92ED;
+}
+.player-wrapper .controls-wrapper .player-settings label.checkbox .checkbox input {
+  display: none;
+}
+.player-wrapper .controls-wrapper .player-settings label.checkbox .checkbox input:checked + .switch-check {
+  display: grid;
+}
+.player-wrapper .controls-wrapper .player-settings label.btn {
+  color: #fff;
+  font-family: Manrope;
+  font-size: 15px;
+  padding: 0 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.player-wrapper .controls-wrapper .player-settings label.volume {
+  padding: 0 20px;
+  display: grid;
+  place-items: center;
+}
+.player-wrapper .controls-wrapper .player-settings label.volume .slide {
+  height: 10px;
+  background: rgb(37, 58, 76);
+  border-radius: 3px;
+  width: 100%;
+  overflow: hidden;
+}
+.player-wrapper .controls-wrapper .player-settings label.volume .slide .current-slide {
+  width: 20%;
+  height: 100%;
+  background: #5fbef3;
+}
+.player-wrapper .controls-wrapper .player-settings span.line {
+  height: 1px;
+  display: grid;
+  background: rgba(255, 255, 255, 0.15);
+}
+.player-wrapper .controls-wrapper .player-settings label {
+  height: 45px;
+}
+.player-wrapper .controls-wrapper.hide {
+  display: none;
 }
 
 .spinner-wrapper {
