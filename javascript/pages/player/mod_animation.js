@@ -1,12 +1,9 @@
 /**
  * Файл: mod_animation.js
- * Описание: Мод добавляющий анимацию загрузки плеера при запросе на сервер Tunime,
- *           также первое воспроизведение нового медио, и анимации кнопок 
- *           воспроизведения / пауза
- * Библиотеки: anime.js, jqery.js, rxjs.js
+ * Описание: Мод добавляющий анимацию загрузки плеера при запросе на сервер Tunime, также первое воспроизведение нового медио, и анимации кнопок воспроизведения / пауза
+ * Библиотеки: anime.js, jqery.js
  */
 
-"use strict"
 //Отвечает за анимацию загрузки плеера
 export const AnimLoadPlayer = {
     load: false,
@@ -28,6 +25,11 @@ export const AnimButtonStatus = {
     play: () => _amBPlay(),
     pause: () => _amBPause()
 };
+
+export const AnimSettings = {
+    show: () => _amSShow(),
+    hide: () => _amSHide()
+}
 
 //Html анимцации загрузки 
 const LOAD_PLAYER_HTML = `<div class="spinner-wrapper"><div class="spinner"><div class="sk-folding-cube"><div class="sk-cube1 sk-cube"></div><div class="sk-cube2 sk-cube"></div><div class="sk-cube4 sk-cube"></div><div class="sk-cube3 sk-cube"></div></div></div></div>`;
@@ -178,5 +180,26 @@ function _amBPause() {
         opacity: 1,
         duration: 200,
         scale: [0.5, 1]
+    });
+}
+
+function _amSShow(){
+    $('.controls-wrapper > .player-settings').css({display: 'flex'});
+    anime({
+        easing: "easeInQuad",
+        targets: ".player-settings",
+        opacity: [0, 1],
+        duration: 200,
+        translateY: [240, 0]
+    });
+}
+
+function _amSHide(){
+    anime({
+        easing: "easeInQuad",
+        targets: ".player-settings",
+        opacity: [1, 0],
+        duration: 200,
+        translateY: [0, 240]
     });
 }

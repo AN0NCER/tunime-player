@@ -1,7 +1,12 @@
-import { InitUI } from "./player/mod_ui.js";
+import { InitUI, InitUICallbacks } from "./player/mod_ui.js";
+import { InitEvent } from "./player/mod_event.js";
+import { InitFunctions } from "./player/mod_functions.js";
+
+export const Player = document.getElementById('player');
+
+const FULL_PLAYER = true;
 
 // import { AnimButtonStatus, AnimLoadPlayer } from "./player/mod_animation.js";
-import { Player } from "./player/mod_event.js";
 // import { LoadM3U8 } from "./player/mod_stream.js";
 // import {} from './player/mod_usercontrol.js';
 
@@ -94,19 +99,34 @@ import { Player } from "./player/mod_event.js";
 // }
 
 
-const hls = new Hls();
+export const hls = new Hls();
 
 export const onBuffered$ = new rxjs.Subject();
+(async () => {
+    InitEvent();
+    InitUI();
+    InitUICallbacks();
+    InitFunctions();
+})();
 
-InitUI();
+if (Hls.isSupported()) {
+    hls.loadSource("https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8");
+    hls.attachMedia(Player);
+    hls.on(Hls.Events.BUFFER_APPENDED, function (event, data) {
+        var bufferedRanges = Player.buffered;
 
-hls.loadSource("https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8");
-hls.attachMedia(Player);
-hls.on(Hls.Events.BUFFER_APPENDED, function(event, data) {
-    var bufferedRanges = Player.buffered;
-    
-    if (bufferedRanges.length > 0) {
-        var loadedTime = bufferedRanges.end(bufferedRanges.length - 1);
-        onBuffered$.next(loadedTime);
-    }
-});
+        if (bufferedRanges.length > 0) {
+            var loadedTime = bufferedRanges.end(bufferedRanges.length - 1);
+            onBuffered$.next(loadedTime);
+        }
+    });
+} else {
+    Player.src = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8";
+    Player.addEventListener('timeupdate', function () {
+        var bufferedRanges = Player.buffered;
+        if (bufferedRanges.length > 0) {
+            var loadedTime = bufferedRanges.end(bufferedRanges.length - 1);
+            onBuffered$.next(loadedTime);
+        }
+    })
+}

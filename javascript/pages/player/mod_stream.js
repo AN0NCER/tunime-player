@@ -1,4 +1,5 @@
 const QUALITY = '720';
+const AUTOQUALITY = true;
 let STREAMS = undefined;
 
 export async function LoadM3U8(id, e) {

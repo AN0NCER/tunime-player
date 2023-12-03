@@ -72,7 +72,7 @@ html {
 
                 .volume-slider {
                     .slide {
-                        max-width: 0px;
+                        max-width: 130px;
                         cursor: pointer;
                         height: 10px;
                         background: rgb(37, 58, 76);
@@ -87,9 +87,9 @@ html {
                         }
                     }
 
-                    &.enable {
+                    &.hide {
                         .slide {
-                            max-width: 130px;
+                            max-width: 0px;
                         }
                     }
                 }
@@ -128,7 +128,7 @@ html {
 
             .loaded-slid {
                 width: 0%;
-                background: rgb(37, 58, 76);
+                background: rgba(72, 112, 148, 0.74);
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -137,7 +137,7 @@ html {
 
             .trim-slid {
                 width: 0%;
-                background: #f35f5f;
+                // background: #f35f5f;
                 position: absolute;
                 right: 0;
                 top: 0;
@@ -305,6 +305,10 @@ html {
         &.hide{
             display: none;
         }
+    }
+
+    &.hide{
+        cursor: none;
     }
 }
 

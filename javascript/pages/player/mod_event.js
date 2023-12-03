@@ -1,6 +1,10 @@
-export const Player = document.getElementById('player');
+import { Player } from "../player.js";
 
-export const onPause$ = rxjs.fromEvent(Player, 'pause');
-export const onPlay$ = rxjs.fromEvent(Player, 'play');
-export const onDuration$ = rxjs.fromEvent(Player, 'durationchange');
-export const onTimeUpdate$ = rxjs.fromEvent(Player, 'timeupdate');
+export let onPause$, onPlay$, onDuration$, onTimeUpdate$ = undefined;
+
+export function InitEvent() {
+    onPause$ = rxjs.fromEvent(Player, 'pause');
+    onPlay$ = rxjs.fromEvent(Player, 'play');
+    onDuration$ = rxjs.fromEvent(Player, 'durationchange');
+    onTimeUpdate$ = rxjs.fromEvent(Player, 'timeupdate');
+}
