@@ -14,27 +14,27 @@ const FULL_PLAYER = true;
 
 // export const onCanPlay$ = rxjs.fromEvent(Player, 'loadstart');
 
-// export const toggleFullScreen = async () => {
-//     const container = document.getElementById('player-wrapper');
-//     const fullscreenApi = container.requestFullscreen
-//         || container.webkitRequestFullScreen
-//         || container.mozRequestFullScreen
-//         || container.msRequestFullscreen;
+export const toggleFullScreen = async () => {
+    const container = document.getElementById('player-wrapper');
+    const fullscreenApi = container.requestFullscreen
+        || container.webkitRequestFullScreen
+        || container.mozRequestFullScreen
+        || container.msRequestFullscreen;
 
-//     if (fullscreenApi == undefined) {
-//         if (VideoPlayer.webkitEnterFullscreen) {
-//             VideoPlayer.webkitEnterFullscreen();
-//         } else if (VideoPlayer.requestFullscreen) {
-//             VideoPlayer.requestFullscreen();
-//         }
-//     }
-//     if (!document.fullscreenElement) {
-//         fullscreenApi.call(container);
-//     }
-//     else {
-//         document.exitFullscreen();
-//     }
-// };
+    if (fullscreenApi == undefined) {
+        if (Player.webkitEnterFullscreen) {
+            Player.webkitEnterFullscreen();
+        } else if (Player.requestFullscreen) {
+            Player.requestFullscreen();
+        }
+    }
+    if (!document.fullscreenElement) {
+        fullscreenApi.call(container);
+    }
+    else {
+        document.exitFullscreen();
+    }
+};
 
 // let _HLS = undefined;
 

@@ -137,7 +137,7 @@ html {
 
             .trim-slid {
                 width: 0%;
-                // background: #f35f5f;
+                background: #f35f5f;
                 position: absolute;
                 right: 0;
                 top: 0;
@@ -157,26 +157,37 @@ html {
             right: 0;
 
             .current-cursor {
-                left: calc(0% - 6.5px);
-                background: #2672DA;
+                z-index: 5;
+                left: calc(0% - 16.5px);
+                .point{
+                    background: #2672DA;
+                }
             }
 
             .trim-cursor {
-                right: calc(0% - 6.5px);
-                background: #da2626;
+                z-index: 6;
+                right: calc(0% - 16.5px);
+                .point{
+                    background: #da2626;
+                }
             }
 
             .cursor {
                 position: absolute;
-                width: 13px;
-                height: 13px;
-                display: grid;
-                top: 0px;
-                z-index: 5;
-                border-radius: 50%;
+                top: -20px;
+                padding-top: 20px;
+                padding-left: 10px;
+                padding-right: 10px;            
                 cursor: pointer;
 
-                &.hide{
+                .point{
+                    border-radius: 50%;
+                    width: 13px;
+                    height: 13px;
+                    display: grid;
+                }
+
+                &.hide {
                     display: none;
                 }
             }
@@ -302,12 +313,12 @@ html {
             }
         }
 
-        &.hide{
+        &.hide {
             display: none;
         }
     }
 
-    &.hide{
+    &.hide {
         cursor: none;
     }
 }
@@ -360,5 +371,13 @@ html {
                 transform-origin: 0% 0%;
             }
         }
+    }
+}
+
+@media screen and (max-width:455px) {
+
+    .player-wrapper .controls-wrapper .player-controls .btn.volume,
+    .player-wrapper .controls-wrapper .player-controls .l-controls .volume-slider {
+        display: none;
     }
 }

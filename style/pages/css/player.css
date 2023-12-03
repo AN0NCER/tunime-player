@@ -109,6 +109,7 @@ html {
 }
 .player-wrapper .controls-wrapper .player-slides .trim-slid {
   width: 0%;
+  background: #f35f5f;
   position: absolute;
   right: 0;
   top: 0;
@@ -125,22 +126,32 @@ html {
   right: 0;
 }
 .player-wrapper .controls-wrapper .player-cursors .current-cursor {
-  left: calc(0% - 6.5px);
+  z-index: 5;
+  left: calc(0% - 16.5px);
+}
+.player-wrapper .controls-wrapper .player-cursors .current-cursor .point {
   background: #2672DA;
 }
 .player-wrapper .controls-wrapper .player-cursors .trim-cursor {
-  right: calc(0% - 6.5px);
+  z-index: 6;
+  right: calc(0% - 16.5px);
+}
+.player-wrapper .controls-wrapper .player-cursors .trim-cursor .point {
   background: #da2626;
 }
 .player-wrapper .controls-wrapper .player-cursors .cursor {
   position: absolute;
+  top: -20px;
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+.player-wrapper .controls-wrapper .player-cursors .cursor .point {
+  border-radius: 50%;
   width: 13px;
   height: 13px;
   display: grid;
-  top: 0px;
-  z-index: 5;
-  border-radius: 50%;
-  cursor: pointer;
 }
 .player-wrapper .controls-wrapper .player-cursors .cursor.hide {
   display: none;
@@ -296,4 +307,11 @@ html {
 }
 .spinner-wrapper .spinner .sk-folding-cube .sk-cube4 {
   transform-origin: 0% 0%;
+}
+
+@media screen and (max-width: 455px) {
+  .player-wrapper .controls-wrapper .player-controls .btn.volume,
+  .player-wrapper .controls-wrapper .player-controls .l-controls .volume-slider {
+    display: none;
+  }
 }

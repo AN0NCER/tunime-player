@@ -1,24 +1,25 @@
 import { Player, onBuffered$ } from "../player.js";
 import { AnimButtonStatus, AnimSettings } from "./mod_animation.js";
 import { onDuration$, onPause$, onPlay$, onTimeUpdate$ } from "./mod_event.js";
+import { CURSOR_WIDTH } from "./mod_functions.js";
 
 export const AUTO_NEKST = true;
 const STANDART_CONTROLS = false;
 
 export function InitUI() {
     $('.l-controls > .volume').on('click', function () {
-        if($('.volume-slider').hasClass('hide')){
+        if ($('.volume-slider').hasClass('hide')) {
             $('.volume-slider').removeClass('hide');
-        }else{
+        } else {
             $('.volume-slider').addClass('hide');
         }
     });
 
     $('.r-controls > .btn.settings').on('click', function () {
-        if($(this).hasClass('showed')){
+        if ($(this).hasClass('showed')) {
             AnimSettings.hide();
             $(this).removeClass('showed')
-        }else{
+        } else {
             AnimSettings.show();
             $(this).addClass('showed')
         }
@@ -63,7 +64,7 @@ export function InitUICallbacks() {
         next: () => {
             const prcnt = calculatePercentageWatched(Player.duration, Player.currentTime);
             $('.player-slides > .current-slid').css({ width: `${prcnt}%` });
-            $('.player-cursors > .current-cursor').css({ left: `calc(${prcnt}% - 6.5px)` });
+            $('.player-cursors > .current-cursor').css({ left: `calc(${prcnt}% - ${CURSOR_WIDTH / 2}px)` });
         }
     });
     onDuration$.subscribe({
@@ -220,7 +221,7 @@ function HideTrimCursor() {
     }, 3000);
 }
 
-function calculatePercentageWatched(videoDuration, currentTime) {
+export function calculatePercentageWatched(videoDuration, currentTime) {
     if (currentTime > videoDuration) {
         currentTime = videoDuration;
     }
