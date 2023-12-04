@@ -1,13 +1,27 @@
-import { Player, hls, onBuffered$, toggleFullScreen } from "../player.js";
+/**
+ * Файл:        mod_functions.js
+ * Описание:    Мод управляющий плеером - функциями от пользователя, такие как:
+ *              Пауза/Воспроизведение, Режим PIP, Режим полного экрана. А также
+ *              управляет жестами пользователся по 3 областям.
+ * Библиотеки:  rxjs.js, jqery.js
+ * Возвращает:  InitFunctions, CURSOR_WIDTH
+ */
+import { AnimeQuery, Player, hls, onBuffered$, toggleFullScreen } from "../player.js";
 import { onDuration$, onTimeUpdate$ } from "./mod_event.js";
-import { AUTO_NEKST } from "./mod_ui.js";
+import { AUTO_NEKST } from "./mod_settings.js";
 
-let END_TIME = 0;
+let END_TIME = 0; //Продолжительность видео после обрезки
+//Настоящий размер курсора
 export const CURSOR_WIDTH = 33;
 
+//Вызов события при изменения endtime
 const onEndTime$ = new rxjs.Subject();
 
+/**
+ * Инициализация функций плеера
+ */
 export function InitFunctions() {
+    //Воспроизведение / Пауза плеера
     $('.l-controls > .switch-button').on('click', function () {
         if ($(this).hasClass('status-pause')) {
             Player.play();
@@ -16,21 +30,102 @@ export function InitFunctions() {
         }
     });
 
+    //Включить / Выключтить режим pip
     $('.r-controls > .btn.pip').on('click', function () {
         togglePictureInPicture();
     });
 
+    //Включить / Отсключить на весь экран
     $('.r-controls > .btn.fs').on('click', function () {
         toggleFullScreen();
     });
 
+    //Событие жестов (Центр) Воспроизведение / Пауза плеера
+    $('.points-event > .center-event').on('click', function () {
+        if (Player.paused) {
+            Player.play();
+        } else {
+            Player.pause();
+        }
+    });
+
+    let isDoubleClick = false;
+    let timeOutDoubleClick;
+    let isPressAndHold = false;
+    let holdTimeout;
+
+    //Событие жестов (Право) Перемотка вперед на 10 секунда
+    $('.points-event > .right-event').on('dblclick', function () {
+        Player.currentTime += 10;
+        isDoubleClick = true;
+        clearTimeout(timeOutDoubleClick);
+        timeOutDoubleClick = setTimeout(function () {
+            isDoubleClick = false;
+        }, 500);
+    });
+
+    //Событие жестов (Право) Перемотка вперед на 10 секунда с условием
+    $('.points-event > .right-event').on('click', function () {
+        if (isDoubleClick == true) {
+            Player.currentTime += 10;
+            clearTimeout(timeOutDoubleClick);
+            timeOutDoubleClick = setTimeout(function () {
+                isDoubleClick = false;
+            }, 500);
+        }
+    });
+
+    //Событие жестов (Право) Ускорение видео на 2
+    $('.points-event > .right-event').on('mousedown touchstart', function () {
+        isPressAndHold = true;
+        holdTimeout = setTimeout(function () {
+            if (isPressAndHold) {
+                Player.playbackRate = 2;
+            }
+        }, 1000); // 1000 миллисекунд = 1 секунда
+    });
+
+    //Событие жестов (Право) Ускорение видео на 1
+    $('.points-event > .right-event').on('mouseup touchend', function () {
+        clearTimeout(holdTimeout);
+        isPressAndHold = false;
+        Player.playbackRate = 1;
+    });
+
+    //Событие жестов (Лево) Перемотка назад на 10 секунда
+    $('.points-event > .left-event').on('dblclick', function () {
+        Player.currentTime -= 10;
+        isDoubleClick = true;
+        clearTimeout(timeOutDoubleClick);
+        timeOutDoubleClick = setTimeout(function () {
+            isDoubleClick = false;
+        }, 500);
+    });
+    //Событие жестов (Лево) Перемотка назад на 10 секунда с условием
+    $('.points-event > .left-event').on('click', function () {
+        if (isDoubleClick == true) {
+            Player.currentTime -= 10;
+            clearTimeout(timeOutDoubleClick);
+            timeOutDoubleClick = setTimeout(function () {
+                isDoubleClick = false;
+            }, 500);
+        }
+    });
+
+
+
     onDuration$.subscribe({
         next: () => {
             if (AUTO_NEKST && Player.duration) {
-                //Сделать проверку если видео нету обрезки то поставить на 2%
-                END_TIME = Player.duration - (2 / 100) * Player.duration;
+                let end_time_list = localStorage.getItem('tun-end-point');
+                if (!end_time_list) end_time_list = {}; else end_time_list = JSON.parse(end_time_list);
+                if (end_time_list && end_time_list[AnimeQuery.id]) {
+                    END_TIME = Player.duration - end_time_list[AnimeQuery.id].time;
+                } else {
+                    //Сделать проверку если видео нету обрезки то поставить на 2%
+                    END_TIME = Player.duration - (2 / 100) * Player.duration;
+                }
                 onEndTime$.next(END_TIME);
-
             }
         }
     });
@@ -39,13 +134,8 @@ export function InitFunctions() {
         next: () => {
             if (AUTO_NEKST && END_TIME != 0) {
                 if (Player.currentTime >= END_TIME) {
-                    console.log('endVideo');
-
                     Player.pause();
-                    Player.src = '';
-                    Player.load();
-
-                    //Сделать переключение на следующий эпизод
+                    ParentWindow.postMessage({ key: 'tunime_next', value: {} }, '*');
                 }
             }
         }
@@ -73,10 +163,13 @@ onEndTime$.subscribe({
         let prcnt = ((Player.duration - endtime) / Player.duration) * 100;
         slid.width(`${prcnt}%`)
         cursor.css({ right: `calc(${prcnt}% - ${CURSOR_WIDTH / 2}px)` });
+        hls.startLoad();
     }
 })
 
-
+/**
+ * Управление currentTime скролл
+ */
 function CurrentPointScroll() {
     const slid = $('.player-slides > .current-slid');
     const cursor = $('.player-cursors > .current-cursor');
@@ -95,7 +188,7 @@ function CurrentPointScroll() {
 
         //Текущая длина slid
         let curWidth = slid.width();
-        //Смещение курсора
+        //Смещение курсораs
         let cursorLeft = cursor.position().left;
         let event = true;
 
@@ -103,7 +196,7 @@ function CurrentPointScroll() {
             //Координаты смещения
             let currentX = e.clientX || e.originalEvent.touches[0].clientX || e.originalEvent.clientX;
             let swipeDistance = currentX - startX;
-            if ((slid.width() / 100) * 100 <= 0) {
+            if (curWidth + swipeDistance <= 0) {
                 return;
             }
             cursor.css('left', cursorLeft + swipeDistance);
@@ -132,6 +225,9 @@ function CurrentPointScroll() {
     });
 }
 
+/**
+ * Управление trim скролл
+ */
 function TrimPointScroll() {
     const slid = $('.player-slides > .trim-slid');
     const cursor = $('.player-cursors > .trim-cursor');
@@ -185,11 +281,19 @@ function TrimPointScroll() {
                 slid.css({ width: `${prcnt}%` });
                 cursor.css({ right: `calc(${prcnt}% - ${CURSOR_WIDTH / 2}px)` });
                 if (played) Player.play();
+                let end_time_list = localStorage.getItem('tun-end-point');
+                if (!end_time_list) end_time_list = {}; else end_time_list = JSON.parse(end_time_list);
+                let time = Player.duration - END_TIME
+                end_time_list[AnimeQuery.id] = { date: new Date(), time: time };
+                localStorage.setItem('tun-end-point', JSON.stringify(end_time_list));
             }
         }
     });
 }
 
+/**
+ * Переключение режима PIP
+ */
 function togglePictureInPicture() {
     if (document.pictureInPictureElement) {
         document.exitPictureInPicture();

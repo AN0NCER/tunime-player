@@ -1,7 +1,10 @@
 /**
- * Файл: mod_animation.js
- * Описание: Мод добавляющий анимацию загрузки плеера при запросе на сервер Tunime, также первое воспроизведение нового медио, и анимации кнопок воспроизведения / пауза
- * Библиотеки: anime.js, jqery.js
+ * Файл:        mod_animation.js
+ * Описание:    Мод добавляющий анимацию загрузки плеера при запросе на сервер 
+ *              Tunime, также первое воспроизведение нового медио, и анимации
+ *              кнопок воспроизведения / пауза
+ * Библиотеки:  anime.js, jqery.js
+ * Возвращает:  AnimLoadPlayer, AnimationPlay, AnimButtonStatus, AnimSettings
  */
 
 //Отвечает за анимацию загрузки плеера
@@ -14,10 +17,6 @@ export const AnimLoadPlayer = {
     stop: function () {
         this.load = true;
     }
-};
-
-//Отвечает за анимацию первого воспроизведения кнопки
-export const AnimationPlay = {
 };
 
 //Отвечает за анимацию состояния плеера Play / Pause
@@ -183,6 +182,9 @@ function _amBPause() {
     });
 }
 
+/**
+ * Анимация показа настроек
+ */
 function _amSShow(){
     $('.controls-wrapper > .player-settings').css({display: 'flex'});
     anime({
@@ -194,6 +196,9 @@ function _amSShow(){
     });
 }
 
+/**
+ * Анимация скрытия настроек
+ */
 function _amSHide(){
     anime({
         easing: "easeInQuad",

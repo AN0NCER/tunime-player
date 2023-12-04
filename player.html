@@ -13,12 +13,18 @@
 <body class="unselectable">
 
     <div class="player-wrapper" id="player-wrapper">
+        <div class="points-event">
+            <div class="left-event"></div>
+            <div class="center-event"></div>
+            <div class="right-event"></div>
+        </div>
         <div class="controls-wrapper">
             <div class="player-settings">
                 <label class="quality-setup">
-                    <div class="quality">360p</div>
-                    <div class="quality">480p</div>
-                    <div class="quality selected">720p</div>
+                    <!-- Изменить -->
+                    <div class="quality" data-q="360">360p</div>
+                    <div class="quality" data-q="480">480p</div>
+                    <div class="quality" data-q="720">720p</div>
                 </label>
                 <span class="line"></span>
                 <label class="autonekst-setup checkbox">
@@ -28,17 +34,13 @@
                         <div class="switch-check"></div>
                     </div>
                 </label>
-                <label class="standart-setup checkbox">
+                <!-- <label class="standart-setup checkbox">
                     <div class="title">Стандартный контролер</div>
                     <div class="checkbox">
                         <input type="checkbox">
                         <div class="switch-check"></div>
                     </div>
-                </label>
-                <span class="line"></span>
-                <label class="btn">
-                    Иметировать ошибку
-                </label>
+                </label> -->
                 <span class="line"></span>
                 <label class="volume">
                     <div class="slide">
@@ -117,6 +119,7 @@
     <script src="/javascript/library/hls.js"></script>
     <script src="/javascript/library/rxjs.umd.min.js"></script>
     <script src="/javascript/library/anime.min.js"></script>
+    <script src="/javascript/kodik.js"></script>
     <script type="module" src="/javascript/pages/player.js"></script>
 </body>
 

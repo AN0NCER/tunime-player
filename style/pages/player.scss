@@ -13,6 +13,7 @@ html {
     position: relative;
 
     video {
+        // filter: brightness(0.9) saturate(1) contrast(1.1);
         height: 100%;
         width: 100%;
     }
@@ -83,6 +84,7 @@ html {
 
                         .current-slide {
                             height: 100%;
+                            max-width: 100%;
                             background: #5fbef3;
                         }
                     }
@@ -142,6 +144,9 @@ html {
                 right: 0;
                 top: 0;
                 z-index: 3;
+                &.hide{
+                    display: none;
+                }
             }
 
             .slid {
@@ -159,7 +164,8 @@ html {
             .current-cursor {
                 z-index: 5;
                 left: calc(0% - 16.5px);
-                .point{
+
+                .point {
                     background: #2672DA;
                 }
             }
@@ -167,7 +173,8 @@ html {
             .trim-cursor {
                 z-index: 6;
                 right: calc(0% - 16.5px);
-                .point{
+
+                .point {
                     background: #da2626;
                 }
             }
@@ -177,10 +184,11 @@ html {
                 top: -20px;
                 padding-top: 20px;
                 padding-left: 10px;
-                padding-right: 10px;            
+                padding-right: 10px;
                 cursor: pointer;
+                // background: #00000081;
 
-                .point{
+                .point {
                     border-radius: 50%;
                     width: 13px;
                     height: 13px;
@@ -293,10 +301,12 @@ html {
                     border-radius: 3px;
                     width: 100%;
                     overflow: hidden;
+                    cursor: pointer;
 
                     .current-slide {
                         width: 20%;
                         height: 100%;
+                        max-width: 100%;
                         background: #5fbef3;
                     }
                 }
@@ -317,6 +327,27 @@ html {
             display: none;
         }
     }
+
+    .points-event {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        // background: #ff00002f;
+        display: flex;
+        z-index: 49;
+        .left-event{
+            width: 100%;
+        }
+        .center-event{
+            width: 100%;
+        }
+        .right-event{
+            width: 100%;
+        }
+    }
+
 
     &.hide {
         cursor: none;

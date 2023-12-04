@@ -68,6 +68,7 @@ html {
 }
 .player-wrapper .controls-wrapper .player-controls .l-controls .volume-slider .slide .current-slide {
   height: 100%;
+  max-width: 100%;
   background: #5fbef3;
 }
 .player-wrapper .controls-wrapper .player-controls .l-controls .volume-slider.hide .slide {
@@ -114,6 +115,9 @@ html {
   right: 0;
   top: 0;
   z-index: 3;
+}
+.player-wrapper .controls-wrapper .player-slides .trim-slid.hide {
+  display: none;
 }
 .player-wrapper .controls-wrapper .player-slides .slid {
   height: 10px;
@@ -245,10 +249,12 @@ html {
   border-radius: 3px;
   width: 100%;
   overflow: hidden;
+  cursor: pointer;
 }
 .player-wrapper .controls-wrapper .player-settings label.volume .slide .current-slide {
   width: 20%;
   height: 100%;
+  max-width: 100%;
   background: #5fbef3;
 }
 .player-wrapper .controls-wrapper .player-settings span.line {
@@ -261,6 +267,24 @@ html {
 }
 .player-wrapper .controls-wrapper.hide {
   display: none;
+}
+.player-wrapper .points-event {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 49;
+}
+.player-wrapper .points-event .left-event {
+  width: 100%;
+}
+.player-wrapper .points-event .center-event {
+  width: 100%;
+}
+.player-wrapper .points-event .right-event {
+  width: 100%;
 }
 .player-wrapper.hide {
   cursor: none;

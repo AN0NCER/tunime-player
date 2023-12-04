@@ -1,12 +1,29 @@
+/**
+ * Файл:        mod_ui.js
+ * Описание:    Мод управляющий визуальным видео плеера, такие как: текущий
+ *              слайдер видео, запуск анимаций, Установки громкости, 
+ *              Автоматическое скрытия управления плеера.
+ * Библиотеки:  rxjs.js, jqery.js
+ * Возвращает:  InitUI, InitUICallbacks
+ */
+
 import { Player, onBuffered$ } from "../player.js";
 import { AnimButtonStatus, AnimSettings } from "./mod_animation.js";
-import { onDuration$, onPause$, onPlay$, onTimeUpdate$ } from "./mod_event.js";
+import { onDuration$, onPause$, onPlay$, onTimeUpdate$, onVolumeChange$ } from "./mod_event.js";
 import { CURSOR_WIDTH } from "./mod_functions.js";
+import { AUTO_NEKST, STANDART_CONTROLS, onAutoNekstChange$ } from "./mod_settings.js";
 
-export const AUTO_NEKST = true;
-const STANDART_CONTROLS = false;
-
+/**
+ * Инициализация управления визуалом плеера
+ */
 export function InitUI() {
+    //Стандартный контролер
+    if(STANDART_CONTROLS){
+        Player.setAttribute("controls", "controls");
+        $('.points-event').hide();
+        $('.controls-wrapper').hide();
+    }
+    //Скрыть / Показать громкость
     $('.l-controls > .volume').on('click', function () {
         if ($('.volume-slider').hasClass('hide')) {
             $('.volume-slider').removeClass('hide');
@@ -15,21 +32,51 @@ export function InitUI() {
         }
     });
 
+    //Открытия настроек
     $('.r-controls > .btn.settings').on('click', function () {
-        if ($(this).hasClass('showed')) {
-            AnimSettings.hide();
-            $(this).removeClass('showed')
-        } else {
-            AnimSettings.show();
-            $(this).addClass('showed')
+        ClickSettings();
+    });
+
+    //Управление громкостью
+    $(`.l-controls > .volume-slider > .slide`).on('mousedown touchstart', function (e) {
+        let startX = e.clientX || e.originalEvent.touches[0].clientX;
+        let slide = $(this).find('.current-slide');
+        let fullWidth = $(this).width();
+        slide.css({ width: `${(e.offsetX / fullWidth) * 100}%` });
+        let width = slide.width();
+        let event = true;
+        $(window).on('mousemove.sound touchmove.sound', function (e) {
+            let currentX = e.clientX || e.originalEvent.touches[0].clientX || e.originalEvent.clientX;
+            let swipeDistance = currentX - startX;
+            slide.width(width + swipeDistance);
+            if (width + swipeDistance <= 0) {
+                return;
+            }
+        });
+        $(window).on('mouseup.sound touchend.sound', function (e) {
+            _endevent();
+        });
+        function _endevent() {
+            if (event) {
+                $(window).off('mousemove.sound touchmove.sound');
+                $(window).off('mouseup.sound touchend.sound');
+                event = false;
+                let prcnt = (slide.width() / fullWidth) * 100;
+                Player.volume = prcnt / 100;
+            }
         }
     });
+
+    SetVolume();
 
     SubscribePlayerControlsEvent();
     SubscribeCurrentCursorsEvents();
     SubscribeTrimCursorEvents();
 }
 
+/**
+ * Инициализация общения между плеером и визуалом
+ */
 export function InitUICallbacks() {
     onPause$.subscribe({
         //переключение switch button на статус паузы
@@ -45,6 +92,9 @@ export function InitUICallbacks() {
         next: () => {
             AnimButtonStatus.play();
             $('.l-controls > .switch-button').removeClass('status-pause');
+            if (onSettings) {
+                ClickSettings();
+            }
         }
     });
     onBuffered$.subscribe({
@@ -74,18 +124,78 @@ export function InitUICallbacks() {
             $('.player-time > .durration').text(texttime);
         }
     });
+    onVolumeChange$.subscribe({
+        next: () => {
+            let prcnt = Player.volume * 100;
+            $(`.l-controls > .volume-slider > .slide > .current-slide`).css({
+                width: `${prcnt}%`
+            })
+        }
+    })
+    onAutoNekstChange$.subscribe({
+        next: () => {
+            if (AUTO_NEKST) {
+                $(`.player-slides > .trim-slid`).removeClass('hide');
+                $(`.trim-cursor`).removeClass('hide');
+            } else {
+                $(`.player-slides > .trim-slid`).addClass('hide');
+                $(`.trim-cursor`).addClass('hide');
+            }
+        }
+    })
 }
 
-const subControls$ = new rxjs.Subject();
+/**
+ * Установка громкости плеера
+ */
+function SetVolume() {
+    let prcnt = Player.volume * 100;
+    $(`.l-controls > .volume-slider > .slide > .current-slide`).css({
+        width: `${prcnt}%`
+    })
+}
+
+/**
+ * Показать / Скрыть настройки
+ */
+function ClickSettings() {
+    if (onSettings) {
+        AnimSettings.hide();
+        onSettings = false;
+        onSettings$.next(false);
+    } else {
+        AnimSettings.show();
+        onSettings = true;
+        onSettings$.next(true);
+    }
+}
+
+const subControls$ = new rxjs.Subject().pipe();
+const onSettings$ = new rxjs.Subject().pipe(
+    rxjs.distinctUntilChanged()
+);
+
+onSettings$.subscribe({
+    next: (opened) => {
+        if (opened) {
+            Player.pause();
+        }
+    }
+})
 
 let inWindow = false;
 let inControls = false;
+let inCursor = false;
+let onSettings = false;
 
+/**
+ * События контроллера плеера
+ */
 function SubscribePlayerControlsEvent() {
     const controls = $('.player-controls');
     controls.on('mouseenter', function () {
         inControls = true;
-        subControls$.next(inControls);
+        subControls$.next('c.mouseenter');
         subCurrentCursor$.next(true);
         subTrimCursor$.next(true);
     });
@@ -95,47 +205,34 @@ function SubscribePlayerControlsEvent() {
     });
     controls.on('mouseleave', function () {
         inControls = false;
-        subControls$.next(inControls);
+        subControls$.next('c.mouseleave');
     })
     $('#player-wrapper').on('mouseleave', function () {
         inWindow = false;
-        subControls$.next(inWindow);
+        subControls$.next('w.mouseleave');
     });
     $('#player-wrapper').on('mouseenter', function () {
         inWindow = true;
-        subControls$.next(inWindow);
+        subControls$.next('w.mouseenter');
     });
     $('#player-wrapper').on('mousemove', function () {
         inWindow = true;
-        subControls$.next(inWindow);
-    });
-    Player.addEventListener('click', function () {
-        subControls$.next();
-        if (Player.paused) {
-            Player.play();
-        } else {
-            Player.pause();
-        }
+        subControls$.next('w.mousemove');
     });
 }
 
+//Здесь фильтруються сигналы для скрытия контроллера
 subControls$.subscribe({
-    next: () => {
-        if (Player.paused) {
-            //Всегда отображаем
-            $('.controls-wrapper').removeClass('hide');
-            $('.player-wrapper').removeClass('hide');
+    next: (targets) => {
+        if (onSettings || Player.paused || inCursor || inControls) {
             clearTimeout(timerHideControls);
             return;
         }
         if (inWindow) {
-            if (!inControls) {
-                //Запустить таймер бездействия
-                HideControls();
-            }
+            HideControls();
         } else {
-            //Скрыть елементы управления
             HideControls(2000);
+            return;
         }
     }
 });
@@ -149,6 +246,9 @@ function HideControls(time = 5000) {
     $('.controls-wrapper').removeClass('hide');
     clearTimeout(timerHideControls);
     timerHideControls = setTimeout(() => {
+        if (onSettings || Player.paused || inCursor || inControls) {
+            return;
+        }
         $('.controls-wrapper').addClass('hide');
         $('.player-wrapper').addClass('hide');
     }, time);
@@ -158,6 +258,7 @@ const subCurrentCursor$ = new rxjs.Subject();
 
 function SubscribeCurrentCursorsEvents() {
     $('.player-cursors > .current-cursor').on('touchstart mouseenter', function () {
+        inCursor = true;
         clearTimeout(timerHideCurrentCursors);
         clearTimeout(timerHideControls);
 
@@ -165,8 +266,9 @@ function SubscribeCurrentCursorsEvents() {
         $('.player-cursors > .trim-cursor').addClass('hide');
     });
     $('.player-cursors > .current-cursor').on('touchend mouseleave', function () {
+        inCursor = false;
         subCurrentCursor$.next(true);
-        subControls$.next(true);
+        subControls$.next('cl.mouseleave');
     })
 }
 
@@ -192,6 +294,7 @@ const subTrimCursor$ = new rxjs.Subject();
 
 function SubscribeTrimCursorEvents() {
     $('.player-cursors > .trim-cursor').on('touchstart mouseenter', function () {
+        inCursor = true;
         clearTimeout(timerHideTrimCursor);
         clearTimeout(timerHideControls);
 
@@ -199,8 +302,9 @@ function SubscribeTrimCursorEvents() {
         $('.player-cursors > .current-cursor').addClass('hide');
     });
     $('.player-cursors > .trim-cursor').on('touchend mouseleave', function () {
+        inCursor = false;
         subTrimCursor$.next(true);
-        subControls$.next(true);
+        subControls$.next('cl.mouseleave');
     })
 }
 
