@@ -19,7 +19,7 @@ export const AnimeQuery = { id: new URLSearchParams(window.location.search).get(
 export async function LoadEpisode(e) {
     if (!e) return;
     AnimLoadPlayer.start();
-    const stream_file = await LoadM3U8Episode(e);
+    const stream_file = await LoadM3U8Episode(AnimeQuery.id, e);
     LoadPlayer(stream_file);
 }
 

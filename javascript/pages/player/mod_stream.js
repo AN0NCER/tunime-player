@@ -16,7 +16,7 @@ export async function LoadM3U8(id, e) {
     return GenLink(streams);
 }
 
-export async function LoadM3U8Episode(e) {
+export async function LoadM3U8Episode(id, e) {
     if (KODIK_LINK) {
         let kodik_link = KODIK_LINK + `?episode=${e}`;
         if (!kodik_link.includes("http")) {
@@ -152,8 +152,6 @@ function generateBlobUrl(qualityVariants = [{ bandwidth: 0, resolution: '0x0', c
             quality.url + '\n';
         m3u8Content += variantLine;
     }
-
-    console.log(m3u8Content);
 
     // Преобразуем строку M3U8 в Blob
     var blob = new Blob([m3u8Content], { type: 'application/vnd.apple.mpegurl' });

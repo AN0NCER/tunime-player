@@ -7,6 +7,7 @@
  * Возвращает:  InitFunctions, CURSOR_WIDTH
  */
 import { AnimeQuery, Player, hls, onBuffered$, toggleFullScreen } from "../player.js";
+import { ParentWindow } from "./mod_api.js";
 import { onDuration$, onTimeUpdate$ } from "./mod_event.js";
 import { AUTO_NEKST } from "./mod_settings.js";
 

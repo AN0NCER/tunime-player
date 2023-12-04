@@ -10,7 +10,8 @@
 
 <body>
     <main>
-        <iframe src="player.html?id=serial-54986&e=6" frameborder="0" style="aspect-ratio: 16/9;width: 100%;border-radius: 5px;"></iframe>
+        <iframe src="player.html?id=serial-54986&e=6" id="player" frameborder="0"
+            style="aspect-ratio: 16/9;width: 100%;border-radius: 5px;"></iframe>
 
     </main>
     <style>
@@ -28,13 +29,20 @@
             padding: 0;
         }
 
-        main{
+        main {
             max-width: 900px;
             min-width: 900px;
             width: 100%;
             margin: 0 auto;
         }
     </style>
+    <script>
+        window.addEventListener("message", (message) => {
+            if (message.data.key == "tunime_next") {
+                document.getElementById('player').contentWindow.postMessage({ key: "kodik_player_api", value: { method: 'set_episode', episode: 7 } });
+            }
+        })
+    </script>
 </body>
 
 </html>
