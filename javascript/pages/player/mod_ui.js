@@ -18,7 +18,7 @@ import { AUTO_NEKST, STANDART_CONTROLS, onAutoNekstChange$ } from "./mod_setting
  */
 export function InitUI() {
     //Стандартный контролер
-    if(STANDART_CONTROLS){
+    if (STANDART_CONTROLS) {
         Player.setAttribute("controls", "controls");
         $('.points-event').hide();
         $('.controls-wrapper').hide();
@@ -85,6 +85,7 @@ export function InitUICallbacks() {
             $('.l-controls > .switch-button').addClass('status-pause');
             subCurrentCursor$.next(true);
             subTrimCursor$.next(true);
+            subControls$.next('p.pause');
         }
     });
     onPlay$.subscribe({
@@ -143,6 +144,11 @@ export function InitUICallbacks() {
             }
         }
     })
+}
+
+export function ResetUI() {
+    $('.player-slides > .current-slid').css({ width: '' });
+    $('.player-cursors > .current-cursor').css({ left: '' });
 }
 
 /**

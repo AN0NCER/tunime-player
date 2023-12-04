@@ -1,4 +1,4 @@
-import { InitUI, InitUICallbacks } from "./player/mod_ui.js";
+import { InitUI, InitUICallbacks, ResetUI } from "./player/mod_ui.js";
 import { InitEvent, onDuration$ } from "./player/mod_event.js";
 import { InitFunctions } from "./player/mod_functions.js";
 import { InitAPI, ParentWindow } from "./player/mod_api.js";
@@ -19,6 +19,7 @@ export const AnimeQuery = { id: new URLSearchParams(window.location.search).get(
 export async function LoadEpisode(e) {
     if (!e) return;
     AnimLoadPlayer.start();
+    ResetUI();
     const stream_file = await LoadM3U8Episode(AnimeQuery.id, e);
     LoadPlayer(stream_file);
 }
