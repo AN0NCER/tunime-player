@@ -348,6 +348,19 @@ html {
         }
     }
 
+    .video-speed{
+        position: absolute;
+        display: grid;
+        padding: 10px 20px;
+        top: 10px;
+        left: -100px;
+        background: #282A2E;
+        border-radius: 3px;
+        svg{
+            fill: #fff;
+        }
+    }
+
 
     &.hide {
         cursor: none;

@@ -286,6 +286,18 @@ html {
 .player-wrapper .points-event .right-event {
   width: 100%;
 }
+.player-wrapper .video-speed {
+  position: absolute;
+  display: grid;
+  padding: 10px 20px;
+  top: 10px;
+  left: -100px;
+  background: #282A2E;
+  border-radius: 3px;
+}
+.player-wrapper .video-speed svg {
+  fill: #fff;
+}
 .player-wrapper.hide {
   cursor: none;
 }

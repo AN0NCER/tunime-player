@@ -4,7 +4,7 @@
  *              Пауза/Воспроизведение, Режим PIP, Режим полного экрана. А также
  *              управляет жестами пользователся по 3 областям.
  * Библиотеки:  rxjs.js, jqery.js
- * Возвращает:  InitFunctions, CURSOR_WIDTH
+ * Возвращает:  InitFunctions, CURSOR_WIDTH, onPlaybackRate2$
  */
 import { AnimeQuery, Player, hls, onBuffered$, toggleFullScreen } from "../player.js";
 import { ParentWindow } from "./mod_api.js";
@@ -17,6 +17,9 @@ export const CURSOR_WIDTH = 33;
 
 //Вызов события при изменения endtime
 const onEndTime$ = new rxjs.Subject();
+
+//Вызов при воспроизведении x2
+export const onPlaybackRate2$ = new rxjs.Subject();
 
 /**
  * Инициализация функций плеера
@@ -82,6 +85,7 @@ export function InitFunctions() {
         holdTimeout = setTimeout(function () {
             if (isPressAndHold) {
                 Player.playbackRate = 2;
+                onPlaybackRate2$.next(true);
             }
         }, 1000); // 1000 миллисекунд = 1 секунда
     });
@@ -91,6 +95,7 @@ export function InitFunctions() {
         clearTimeout(holdTimeout);
         isPressAndHold = false;
         Player.playbackRate = 1;
+        onPlaybackRate2$.next(false);
     });
 
     //Событие жестов (Лево) Перемотка назад на 10 секунда

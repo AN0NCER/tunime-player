@@ -4,7 +4,8 @@
  *              Tunime, также первое воспроизведение нового медио, и анимации
  *              кнопок воспроизведения / пауза
  * Библиотеки:  anime.js, jqery.js
- * Возвращает:  AnimLoadPlayer, AnimationPlay, AnimButtonStatus, AnimSettings
+ * Возвращает:  AnimLoadPlayer, AnimationPlay, AnimButtonStatus, AnimSettings, 
+ *              AnimRate
  */
 
 //Отвечает за анимацию загрузки плеера
@@ -25,9 +26,16 @@ export const AnimButtonStatus = {
     pause: () => _amBPause()
 };
 
+//Отвечает за анимацию настроик
 export const AnimSettings = {
     show: () => _amSShow(),
     hide: () => _amSHide()
+}
+
+//Отвечает за анимацию скорости воспроизведение
+export const AnimRate = {
+    show: () => _amRShow(),
+    hide: () => _amRhide()
 }
 
 //Html анимцации загрузки 
@@ -185,8 +193,8 @@ function _amBPause() {
 /**
  * Анимация показа настроек
  */
-function _amSShow(){
-    $('.controls-wrapper > .player-settings').css({display: 'flex'});
+function _amSShow() {
+    $('.controls-wrapper > .player-settings').css({ display: 'flex' });
     anime({
         easing: "easeInQuad",
         targets: ".player-settings",
@@ -199,7 +207,7 @@ function _amSShow(){
 /**
  * Анимация скрытия настроек
  */
-function _amSHide(){
+function _amSHide() {
     anime({
         easing: "easeInQuad",
         targets: ".player-settings",
@@ -207,4 +215,28 @@ function _amSHide(){
         duration: 200,
         translateY: [0, 240]
     });
+}
+
+/**
+ * Анимация отображение скорости воспроизведения
+ */
+function _amRShow() {
+    anime({
+        targets: ".video-speed",
+        easing: "easeInQuad",
+        duration: 100,
+        translateX: 110
+    });
+}
+
+/**
+ * Анимация скрытия скорости воспроизведения
+ */
+function _amRhide(){
+    anime({
+        targets: ".video-speed",
+        easing: "easeInQuad",
+        duration: 100,
+        translateX: 0
+    })
 }

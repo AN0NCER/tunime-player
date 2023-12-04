@@ -8,9 +8,9 @@
  */
 
 import { Player, onBuffered$ } from "../player.js";
-import { AnimButtonStatus, AnimSettings } from "./mod_animation.js";
+import { AnimButtonStatus, AnimRate, AnimSettings } from "./mod_animation.js";
 import { onDuration$, onPause$, onPlay$, onTimeUpdate$, onVolumeChange$ } from "./mod_event.js";
-import { CURSOR_WIDTH } from "./mod_functions.js";
+import { CURSOR_WIDTH, onPlaybackRate2$ } from "./mod_functions.js";
 import { AUTO_NEKST, STANDART_CONTROLS, onAutoNekstChange$ } from "./mod_settings.js";
 
 /**
@@ -132,7 +132,7 @@ export function InitUICallbacks() {
                 width: `${prcnt}%`
             })
         }
-    })
+    });
     onAutoNekstChange$.subscribe({
         next: () => {
             if (AUTO_NEKST) {
@@ -141,6 +141,15 @@ export function InitUICallbacks() {
             } else {
                 $(`.player-slides > .trim-slid`).addClass('hide');
                 $(`.trim-cursor`).addClass('hide');
+            }
+        }
+    });
+    onPlaybackRate2$.subscribe({
+        next: (israte) => {
+            if(israte){
+                AnimRate.show();
+            }else{
+                AnimRate.hide();
             }
         }
     })
