@@ -6,7 +6,7 @@
  * Библиотеки:  rxjs.js, jqery.js
  * Возвращает:  InitSettings, QUALITY, AUTO_NEKST, FULL_PLAYER, AUTOQUALITY,
  *              STANDART, STANDART_CONTROLS, onQualityChange$, 
- *              onAutoNekstChange$,
+ *              onAutoNekstChange$, ALTERNATIVE_FULLSCREEN
  */
 
 import { Player, hls } from "../player.js";
@@ -18,6 +18,7 @@ export const FULL_PLAYER = true;
 export const AUTOQUALITY = true;
 export const STANDART = false;
 export const STANDART_CONTROLS = false;
+export const ALTERNATIVE_FULLSCREEN = true;
 
 /**
  * Изменение качество видеоролика

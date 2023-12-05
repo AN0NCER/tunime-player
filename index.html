@@ -10,9 +10,7 @@
 
 <body>
     <main>
-        <iframe src="player.html?id=serial-54986&e=6" id="player" frameborder="0"
-            style="aspect-ratio: 16/9;width: 100%;border-radius: 5px;"></iframe>
-
+        <iframe src="player.html?id=serial-54986&e=6" id="player" class="" frameborder="0"></iframe>
     </main>
     <style>
         html,
@@ -36,6 +34,23 @@
             margin: 0 auto;
         }
 
+        iframe {
+            aspect-ratio: 16/9;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .fullscreen{
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 100%;
+            border-radius: 0;
+            aspect-ratio: auto;
+        }
+
         @media screen and (max-width: 900px) {
             main {
                 max-width: none;
@@ -51,6 +66,13 @@
         window.addEventListener("message", (message) => {
             if (message.data.key == "tunime_next") {
                 document.getElementById('player').contentWindow.postMessage({ key: "kodik_player_api", value: { method: 'set_episode', episode: 7 } });
+            }
+            if(message.data.key == "tunime_fullscreen"){
+                if(message.data.value.full){
+                    document.getElementById('player').classList.add("fullscreen");
+                }else{
+                    document.getElementById('player').classList.remove("fullscreen");
+                }
             }
         })
     </script>

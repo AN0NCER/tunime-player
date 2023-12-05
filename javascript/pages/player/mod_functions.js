@@ -9,7 +9,7 @@
 import { AnimeQuery, Player, hls, onBuffered$, toggleFullScreen } from "../player.js";
 import { ParentWindow } from "./mod_api.js";
 import { onDuration$, onTimeUpdate$ } from "./mod_event.js";
-import { AUTO_NEKST } from "./mod_settings.js";
+import { ALTERNATIVE_FULLSCREEN, AUTO_NEKST } from "./mod_settings.js";
 
 let END_TIME = 0; //Продолжительность видео после обрезки
 //Настоящий размер курсора
@@ -39,9 +39,16 @@ export function InitFunctions() {
         togglePictureInPicture();
     });
 
+    //Для альтернативного FullScreen
+    let fullscreen = false;
     //Включить / Отсключить на весь экран
     $('.r-controls > .btn.fs').on('click', function () {
-        toggleFullScreen();
+        if (ALTERNATIVE_FULLSCREEN) {
+            fullscreen = !fullscreen;
+            ParentWindow.postMessage({ key: 'tunime_fullscreen', value: { full: fullscreen } }, '*');
+        } else {
+            toggleFullScreen();
+        }
     });
 
     //Событие жестов (Центр) Воспроизведение / Пауза плеера
