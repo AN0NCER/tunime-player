@@ -18,7 +18,7 @@ export const FULL_PLAYER = true;
 export const AUTOQUALITY = true;
 export const STANDART = false;
 export const STANDART_CONTROLS = false;
-export const ALTERNATIVE_FULLSCREEN = true;
+export const ALTERNATIVE_FULLSCREEN = false;
 
 /**
  * Изменение качество видеоролика
