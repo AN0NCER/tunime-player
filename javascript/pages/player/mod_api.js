@@ -1,9 +1,10 @@
 /**
  * Файл:        mod_api.js
  * Описание:    Мод добавляющий апи для общения PrentWindow и Плеера,
- *              также слушает запросы с PrentWindow
+ *              также слушает запросы с PrentWindow, и занимаеться 
+ *              отправкой значения в ParentWindow
  * Библиотеки:  rxjs.js
- * Возвращает:  InitAPI, ParentWindow
+ * Возвращает:  InitAPI, ParentWindow, SendAPI
  */
 
 import { LoadEpisode, Player } from "../player.js";
@@ -98,4 +99,21 @@ export function InitAPI() {
             }
         }
     });
+}
+
+/**
+ * Отправляет сообщения ParentWindow
+ */
+export const SendAPI = {
+    fullscreen: (val) => {
+        ParentWindow.postMessage({ key: 'tunime_fullscreen', value: { full: val } }, '*')
+    },
+
+    next: () => {
+        ParentWindow.postMessage({ key: 'tunime_next', value: {} }, '*');
+    },
+
+    error: (val) => {
+        ParentWindow.postMessage({ key: 'tunime_error', value: val }, "*");
+    }
 }

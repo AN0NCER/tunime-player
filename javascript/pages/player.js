@@ -1,7 +1,7 @@
 import { InitUI, InitUICallbacks, ResetUI } from "./player/mod_ui.js";
 import { InitEvent, onDuration$ } from "./player/mod_event.js";
 import { InitFunctions } from "./player/mod_functions.js";
-import { InitAPI, ParentWindow } from "./player/mod_api.js";
+import { InitAPI, ParentWindow, SendAPI } from "./player/mod_api.js";
 import { InitSettings, QUALITY } from "./player/mod_settings.js";
 import { AnimLoadPlayer } from "./player/mod_animation.js";
 import { LoadM3U8, LoadM3U8Episode } from "./player/mod_stream.js";
@@ -94,7 +94,7 @@ function InitPlayer() {
         });
         hls.on(Hls.Events.ERROR, (e, data) => {
             if (data.fatal) {
-                ParentWindow.postMessage({ key: 'tunime_error', value: data.details }, "*");
+                SendAPI.error(data.details)
             }
         });
     } else {

@@ -7,9 +7,10 @@
  * Возвращает:  InitFunctions, CURSOR_WIDTH, onPlaybackRate2$
  */
 import { AnimeQuery, Player, hls, onBuffered$, toggleFullScreen } from "../player.js";
-import { ParentWindow } from "./mod_api.js";
+import { SendAPI } from "./mod_api.js";
 import { onDuration$, onTimeUpdate$ } from "./mod_event.js";
 import { ALTERNATIVE_FULLSCREEN, AUTO_NEKST } from "./mod_settings.js";
+import { InitShortcuts } from "./mod_shortcuts.js";
 
 let END_TIME = 0; //Продолжительность видео после обрезки
 //Настоящий размер курсора
@@ -45,7 +46,7 @@ export function InitFunctions() {
     $('.r-controls > .btn.fs').on('click', function () {
         if (ALTERNATIVE_FULLSCREEN) {
             fullscreen = !fullscreen;
-            ParentWindow.postMessage({ key: 'tunime_fullscreen', value: { full: fullscreen } }, '*');
+            SendAPI.fullscreen(fullscreen);
         } else {
             toggleFullScreen();
         }
@@ -148,7 +149,7 @@ export function InitFunctions() {
             if (AUTO_NEKST && END_TIME != 0) {
                 if (Player.currentTime >= END_TIME) {
                     Player.pause();
-                    ParentWindow.postMessage({ key: 'tunime_next', value: {} }, '*');
+                    SendAPI.next();
                 }
             }
         }
@@ -167,6 +168,7 @@ export function InitFunctions() {
 
     CurrentPointScroll();
     TrimPointScroll();
+    InitShortcuts();
 }
 
 onEndTime$.subscribe({
@@ -272,7 +274,6 @@ function TrimPointScroll() {
                 _endevent();
                 return;
             }
-            console.log();
             cursor.css('right', (window.innerWidth - cursorLeft) - swipeDistance);
             cursor.css({ right: `calc(${(window.innerWidth - cursorLeft) - swipeDistance - (CURSOR_WIDTH / 2)}px - ${CURSOR_WIDTH / 2}px)` });
             slid.width((curWidth + -swipeDistance));

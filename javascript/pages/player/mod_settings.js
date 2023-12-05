@@ -109,7 +109,6 @@ onQualityChange$.subscribe({
                 level = i;
             }
         }
-        console.log(hls.levels[level]);
         //Если выбранный уровень лучше чем текущий сегмент то перегрузить буффер
         if (hls.levels[hls.currentLevel].bitrate <= hls.levels[level].bitrate) {
             hls.nextLevel = level;
