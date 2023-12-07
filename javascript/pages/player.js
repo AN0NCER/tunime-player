@@ -1,6 +1,6 @@
 import { InitUI, InitUICallbacks, ResetUI } from "./player/mod_ui.js";
-import { InitEvent, onDuration$, onPlay$ } from "./player/mod_event.js";
-import { InitFunctions } from "./player/mod_functions.js";
+import { InitEvent, onPlay$ } from "./player/mod_event.js";
+import { InitFunctions, ResetFunctions } from "./player/mod_functions.js";
 import { InitAPI, ParentWindow, SendAPI } from "./player/mod_api.js";
 import { FULL_PLAYER, InitSettings, QUALITY } from "./player/mod_settings.js";
 import { AnimLoadPlayer } from "./player/mod_animation.js";
@@ -20,7 +20,14 @@ export async function LoadEpisode(e) {
     if (!e) return;
     AnimLoadPlayer.start();
     ResetUI();
+    ResetFunctions();
     const stream_file = await LoadM3U8Episode(AnimeQuery.id, e);
+    let b = onBuffered$.subscribe({
+        next: () => {
+            Player.play();
+            b.unsubscribe();
+        }
+    });
     LoadPlayer(stream_file);
 }
 
@@ -114,7 +121,7 @@ function InitPlayer() {
  * @param {string} stream_file - URL link к файлу m3u8
  */
 function LoadPlayer(stream_file) {
-    let s = onDuration$.subscribe({
+    let s = onBuffered$.subscribe({
         next: () => {
             AnimLoadPlayer.stop();
             s.unsubscribe();
