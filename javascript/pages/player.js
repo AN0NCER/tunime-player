@@ -1,8 +1,8 @@
 import { InitUI, InitUICallbacks, ResetUI } from "./player/mod_ui.js";
-import { InitEvent, onDuration$ } from "./player/mod_event.js";
+import { InitEvent, onDuration$, onPlay$ } from "./player/mod_event.js";
 import { InitFunctions } from "./player/mod_functions.js";
 import { InitAPI, ParentWindow, SendAPI } from "./player/mod_api.js";
-import { InitSettings, QUALITY } from "./player/mod_settings.js";
+import { FULL_PLAYER, InitSettings, QUALITY } from "./player/mod_settings.js";
 import { AnimLoadPlayer } from "./player/mod_animation.js";
 import { LoadM3U8, LoadM3U8Episode } from "./player/mod_stream.js";
 
@@ -118,6 +118,14 @@ function LoadPlayer(stream_file) {
         next: () => {
             AnimLoadPlayer.stop();
             s.unsubscribe();
+        }
+    });
+    let f = onPlay$.subscribe({
+        next: () => {
+            if(FULL_PLAYER){
+                toggleFullScreen();
+            }
+            f.unsubscribe();
         }
     });
     if (Hls.isSupported()) {
